@@ -3,7 +3,13 @@ package com.theironyard.jdblack;
 /**
  * Created by jonathandavidblack on 7/12/16.
  */
-public class Card {
+public class Card implements Comparable<Card> {
+
+    @Override
+    public int compareTo(Card c) {
+
+        return this.rank.ordinal() -c.rank.ordinal();
+    }
 
     enum Suit {
         CLUBS,

@@ -1,6 +1,11 @@
 package com.theironyard.jdblack;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -44,8 +49,43 @@ public class Main {
         HashSet<Card.Suit> suits = hand.stream()
                 .map(card -> card.suit)
                 .collect(Collectors.toCollection(HashSet<Card.Suit>::new));
+
         return suits.size() == 1;
     }
+    static boolean isFourOfAKind(HashSet<Card> hand) {
+        HashSet<Card.Rank> fourOfAKind = hand.stream()
+                .map(card -> card.rank)
+                .collect(Collectors.toCollection(HashSet<Card.Rank>::new));
+        return fourOfAKind.size() == 1;
+    }
+    static boolean isStraight(HashSet<Card> hand) {
+        List<Card.Rank> straight = hand.stream()
+                .map(card -> card.rank)
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList<Card.Rank>::new));
+        for (Card.Rank cr : straight) {
+
+        }
+        return straight.size() == 4;
+
+    }
+    static boolean isThreeOfAKind(HashSet<Card> hand) {
+        ArrayList<Integer> threeOfAKind = hand.stream()
+                .map(card -> card.rank.ordinal())
+                .collect(Collectors.toCollection(ArrayList<Integer>::new));
+        int [] cardFreq = new int[13];
+
+        for (Integer i : threeOfAKind) {
+            cardFreq [i] = cardFreq[i] + 1;
+        }
+        for (int i : cardFreq) {
+            if (i == 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static void main(String[] args) {
         //calculate every possibility of 4 card hands in a 52 card deck
@@ -54,9 +94,19 @@ public class Main {
         HashSet<HashSet<Card>> flushes = hands.stream()
                 .filter(Main::isFlush)
                 .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
+        HashSet<HashSet<Card>> straights = hands.stream()
+                .filter(Main::isStraight)
+//                .filter(Main::isFlush)
+                .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
+        HashSet<HashSet<Card>> fourOfAKinds = hands.stream()
+                .filter(Main::isFourOfAKind)
+                .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
+        HashSet<HashSet<Card>> threeOfAKinds = hands.stream()
+                .filter(Main::isThreeOfAKind)
+                .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
 
+        System.out.println(straights.size());
 
-        System.out.println(flushes.size());
 
     }
 }
