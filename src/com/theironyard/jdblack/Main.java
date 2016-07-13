@@ -76,6 +76,8 @@ public class Main {
     static boolean isStraightFlush(HashSet<Card> hand) {
         return isStraight(hand) && isFlush(hand);
     }
+    //got help from john crooks on this method
+    //still need to work on my problem solving
     static boolean isThreeOfAKind(HashSet<Card> hand) {
         ArrayList<Integer> threeOfAKind = hand.stream()
                 .map(card -> card.rank.ordinal())
@@ -92,6 +94,7 @@ public class Main {
         }
         return false;
     }
+    //got help from a friend who is a developer on this
     static boolean isTwoPair(HashSet<Card> hand) {
         int count = 0;
         List<Card.Rank> straight = hand.stream()
