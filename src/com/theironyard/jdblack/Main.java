@@ -136,7 +136,6 @@ public class Main {
                 .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
 
         System.out.println(straightFlush.size());
-
-
+        
     }
 }
