@@ -63,27 +63,51 @@ public class Main {
                 .map(card -> card.rank)
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList<Card.Rank>::new));
-        for (Card.Rank cr : straight) {
 
+        for (int i = 0; i < straight.size() -1; i++) {
+            Card.Rank current = straight.get(i);
+            Card.Rank next = straight.get(i + 1);
+            if ((current.ordinal() + 1) % 13 != (next.ordinal()) % 13) {
+                return false;
+            }
         }
-        return straight.size() == 4;
-
+        return true;
+    }
+    static boolean isStraightFlush(HashSet<Card> hand) {
+        return isStraight(hand) && isFlush(hand);
     }
     static boolean isThreeOfAKind(HashSet<Card> hand) {
         ArrayList<Integer> threeOfAKind = hand.stream()
                 .map(card -> card.rank.ordinal())
                 .collect(Collectors.toCollection(ArrayList<Integer>::new));
-        int [] cardFreq = new int[13];
+        int [] ranks = new int[13];
 
         for (Integer i : threeOfAKind) {
-            cardFreq [i] = cardFreq[i] + 1;
+            ranks [i] = ranks[i] + 1;
         }
-        for (int i : cardFreq) {
+        for (int i : ranks) {
             if (i == 3) {
                 return true;
             }
         }
         return false;
+    }
+    static boolean isTwoPair(HashSet<Card> hand) {
+        int count = 0;
+        List<Card.Rank> straight = hand.stream()
+                .map(card -> card.rank)
+                .collect(Collectors.toCollection(ArrayList<Card.Rank>::new));
+        int size = hand.size() - 1;
+        for (int i = 0; i < size; i ++) {
+            Card.Rank current = straight.remove(straight.size() - 1);
+
+            boolean foundDuplicate = straight.stream()
+                    .anyMatch(rank -> rank == current);
+            if (foundDuplicate) {
+                count++;
+            }
+        }
+        return count >= 2;
     }
 
 
@@ -104,8 +128,14 @@ public class Main {
         HashSet<HashSet<Card>> threeOfAKinds = hands.stream()
                 .filter(Main::isThreeOfAKind)
                 .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
+        HashSet<HashSet<Card>> twoPair = hands.stream()
+                .filter(Main::isTwoPair)
+                .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
+        HashSet<HashSet<Card>> straightFlush = hands.stream()
+                .filter(Main::isStraightFlush)
+                .collect(Collectors.toCollection(HashSet<HashSet<Card>>::new));
 
-        System.out.println(straights.size());
+        System.out.println(straightFlush.size());
 
 
     }
